@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+
+  php-cli:
+    build:
+      context: ./php-cli
+    tty: true
+    volumes: 
+      - ./app:/var/www
+    networks: 
+      - web-network
+
+  docker-nginx:
+    build: 
+      context: ./nginx
+    ports:
+      - "4000:80"
+    tty: true
+    volumes:
+      - ./app:/var/www
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    networks:
+      - web-network
+
+  docker-php-fpm:
+    build: 
+      context: ./php-fpm
+    tty: true
+    volumes:
+      - ./app:/var/www
+    networks:
+      - web-network
+
+networks:
+  web-network:
+    driver: bridge
